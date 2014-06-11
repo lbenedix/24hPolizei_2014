@@ -208,6 +208,10 @@
                         /* clone tweet*/
                         var tmp_tweet = {};
                         jQuery.extend(tmp_tweet,tweet);
+                        
+                        if(tmp_tweet.bezirk == undefined){
+                            tmp_tweet.bezirk = "";
+                        }
 
                         /* highlight search terms */
                         var words = [];

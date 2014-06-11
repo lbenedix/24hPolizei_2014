@@ -4,54 +4,54 @@
     <title>#24hPolizei @lbenedix</title>
     <meta charset="utf-8" />
 
-
     <link rel="stylesheet" href="css/kube.min.css" />
     <style type="text/css">
             /* CSS Mini Reset http://www.vcarrer.com/2010/05/css-mini-reset.html */
             html, body, div, form, fieldset, legend, label{margin: 0;padding: 0; }
-            html{overflow-y: scroll;}
+            /*html{overflow-y: scroll;}*/
             table{border-collapse: collapse;border-spacing: 0;}
             th, td{text-align: left;vertical-align: top;}
             h1, h2, h3, h4, h5, h6, th, td, caption { font-weight:normal; }
             img { border: 0; }
 
             body{ padding:1em; }
-            #karte{text-align: right; width:60%;position: fixed; top:100px;}
-            #tweets .listWrapper{ overflow-y:auto; height:100%; width:100%; padding-right: 1em; }
+            #karte{text-align: right;}
+            #tweets .listWrapper{ overflow-y:auto; height:80vh;margin-top: 1em;}
             #tweets > div > ul > li { border: 1px solid #333; margin-top: 0.5em; padding: 0.5em; border-radius: 0.3em;list-style-type: none;}
             a { text-decoration: none; }
-            svg{width: 100%; position: relative; top: -140px; left: 0px;}
             #socialshareprivacy > ul > li.settings_info.down{display:none;}
             polygon{fill:transparent;cursor:pointer;}
-
+            ul{ margin:0px;}
+            svg{max-height: 90%;max-width: 100%;}
+            #title{ display: inline; }
+            #num{ float: right;}
+            @media only screen and (max-width: 767px) {
+                #tweets .listWrapper{
+                    height:80%;
+                }
+            }
 
     </style>
 
 </head>
 <body>
 
-    <div class="units-row" style="float:right;">
-        <p class="input-groups unit-push-right width-25" >
-            <input id="search_input" type="text" name="go" placeholder="Search" />
-                            <span class="btn-append">
-                                <button id="search_btn" class="btn btn-blue" style="width: 11em;">Alle durchsuchen</button>
-                            </span>
-        </p>
-    </div>
 
     <div class="units-row">
-        <div class="unit-60">
-            <div class="units-row">
-                <div>&nbsp;</div>
-                <div id="karte">
-                    <h2>&nbsp;</h2>
-                    <span></span>
-                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" xml:space="preserve"></svg>
-                </div>
-            </div>
+        <div class="unit-70">
+            <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 790" xml:space="preserve"></svg>
         </div>
+        <div class="unit-30">
+            <div>
+                <p class="input-groups unit-push-right" >
+                    <input id="search_input" type="text" name="go" placeholder="Search" />
+                    <span class="btn-append">
+                        <button id="search_btn" class="btn btn-blue" style="width: 11em;">Alle durchsuchen</button>
+                    </span>
+                </p>
+                <h2 id="title"></h2><span id="num"></span>
+            </div>
 
-        <div class="unit-40">
             <div class="units-row" id="tweets">
                 <h3 id="info">
                     Klicke auf einen Bezirk, um die entsprechenden Tweets aus der <a href="https://twitter.com/hashtag/24hPolizei">#24hPolizei</a> Aktion zu sehen, oder durchsuche alle Tweets nach einem Stichwort.
@@ -61,16 +61,17 @@
                     </ul>
                 </div>
             </div>
-            <div class="units-row" style="position:fixed;bottom:-42px;right:0px;padding-right:142px;background: white;">
-                <div id="socialshareprivacy"></div>
-                <div style="position:fixed; bottom:10px; right:10px;">
+
+            <div style="position:fixed;bottom:-1.1em;right:0px;padding-right:142px;background: white;width:100%;">
+                <div id="socialshareprivacy" style="float:right;"></div>
+                <div style="position:fixed; bottom:0em; right:0em;">
                     <a href="mailto:lb@bombenlabor.de"><img src="lb.png" /></a>
                 </div>
 
             </div>
-
         </div>
     </div>
+
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
@@ -147,8 +148,9 @@
             /* color the districts */
             $.each(bezirke_mapping, function(key, value){
                 var bezirk = $('.'+key);
+                var heat = heat_map[key];
                 bezirk.css( 'fill', '#E87B0C' );
-                bezirk.css( 'fill-opacity', heat_map[key] )
+                bezirk.css( 'fill-opacity', heat );
                 bezirk.css( 'stroke', '#003399' );
                 bezirk.css( 'stroke-width', '.125' );
             });
@@ -168,9 +170,9 @@
                 );
             });
             if( list_of_tweets.length == 1 ){
-                $('#karte > span').text(list_of_tweets.length+' Einsatz');
+                $('#num').text(list_of_tweets.length+' Einsatz');
             }else{
-                $('#karte > span').text(list_of_tweets.length+' Einsätze');
+                $('#num').text(list_of_tweets.length+' Einsätze');
             }
 
         }
@@ -179,8 +181,8 @@
             if(query.length==0){
                 console.log('search, empty query');
                 $('#info' ).show();
-                $('#karte h2' ).html('&nbsp;');
-                $('#karte > span' ).html('&nbsp;');
+                $('#title' ).html('&nbsp;');
+                $('#num' ).html('&nbsp;');
                 $('#tweets ul').html('');
                 window.location.hash = '';
                 $.each(bezirke_mapping, function(bezirk_key, bezirk_value){
@@ -192,8 +194,8 @@
                 var result_tweets = [];
 
                 $('#info' ).hide();
-                $('#karte h2' ).text(query);
-                $('#karte > span' ).text('');
+                $('#title' ).text(query);
+                $('#num' ).text('');
                 $('#tweets ul').html('');
                 window.location.hash = '';
 
@@ -239,11 +241,9 @@
 
         $( document ).ready(function() {
 
-            /*
             $.get( "tweets.json", function( data ) {
                 tweets = jQuery.parseJSON(data);
-            });
-            */
+
 
                 $('svg').load('Berliner_Bezirke.svg', function() {
 
@@ -280,7 +280,7 @@
                             $('#search_input' ).val('');
                             active_bezirk = bezirk_key;
                             window.location.hash = bezirk_key;
-                            $('#karte h2' ).text(bezirke_mapping[bezirk_key]);
+                            $('#title' ).text(bezirke_mapping[bezirk_key]);
                             var bezirk_tweets = filter_tweets_by_bezirk( bezirk_key );
                             paint_map(tweets);
                             render_tweets(bezirk_tweets);
@@ -297,7 +297,7 @@
                         $('#'+active_bezirk ).click();
                     }
                 });
-//            });
+            });
         });
 
 
@@ -310,12 +310,16 @@
                     console.log('popstate');
                     $('#info' ).show();
                     $('#tweets ul').html('');
-                    $('#karte h2' ).html('&nbsp;');
-                    $('#karte > span' ).html('&nbsp;');
+                    $('#title' ).html('&nbsp;');
+                    $('#num' ).html('&nbsp;');
                 }
             }
         });
     </script>
-<a href="https://github.com/lbenedix/24hPolizei"><img style="position: fixed; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/121cd7cbdc3e4855075ea8b558508b91ac463ac2/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f677265656e5f3030373230302e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_green_007200.png"></a>
+
 </body>
 </html>
+
+
+
+

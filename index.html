@@ -244,9 +244,8 @@
 
         $( document ).ready(function() {
 
-            $.getJSON( "tweets.json", function( data ) {
-
-                tweets = jQuery.parseJSON(data);
+            $.get( "tweets.json", function( data ) {
+                tweets = $.parseJSON(data);
 
 
                 $('svg').load('Berliner_Bezirke.svg', function() {

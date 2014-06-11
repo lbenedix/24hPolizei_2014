@@ -211,8 +211,8 @@
                         
                         console.log(tmp_tweet);
                         
-                        if(!tmp_tweet.bezirk){
-                            tmp_tweet.bezirk = "";
+                        if( tmp_tweet.bezirk.length == 0 ){
+                            tmp_tweet.bezirk = " ";
                         }
 
                         /* highlight search terms */

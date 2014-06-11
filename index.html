@@ -209,7 +209,7 @@
                         var tmp_tweet = {};
                         jQuery.extend(tmp_tweet,tweet);
                         
-                        if(tmp_tweet.bezirk == undefined){
+                        if(!tmp_tweet.bezirk){
                             tmp_tweet.bezirk = "";
                         }
 
